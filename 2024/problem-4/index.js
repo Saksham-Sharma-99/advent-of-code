@@ -27,12 +27,12 @@ fs.readFile(file_path, 'utf8', (err, data) => {
         if (!incOrDecArrayData.valid) { continue };
 
         let safeArray = true;
-        let skippedOnce = false;
+        let skippedOnce = incOrDecArrayData.skippedOnce;
         const arrayToValidate = incOrDecArrayData.array
         for(let j = 1; j <= arrayToValidate.length - 1; j++){
             const el = arrayToValidate[j];
             if (Math.abs(el - arrayToValidate[j - 1]) > 3 || Math.abs(el - arrayToValidate[j - 1]) < 1){
-                if (j !== 1){
+                if (j !== 1 && j !== arrayToValidate.length - 1){
                     safeArray = false;
                     break;
                 }
@@ -73,10 +73,10 @@ function validateArrayTrend(arr, testSubArray) {
       }
     }
 
-    if (isIncreasing && !isDecreasing) return { valid: true, array: arr };
-    if (isDecreasing && !isIncreasing) return { valid: true, array: arr };
+    if (isIncreasing && !isDecreasing) return { valid: true, array: arr, skippedOnce: !testSubArray };
+    if (isDecreasing && !isIncreasing) return { valid: true, array: arr, skippedOnce: !testSubArray  };
 
-    if (!testSubArray) return { valid: false, array: arr};
+    if (!testSubArray) return { valid: false, array: arr, skippedOnce: !testSubArray };
     
     if (testSubArray){
         if (incBreakingPoints === 1){
